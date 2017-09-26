@@ -14,7 +14,7 @@ func Env() map[string]string {
 		m["host"] = "localhost"
 	}
 	if m["user"] == "" {
-		m["user"] = "user"
+		m["user"] = "keyc"
 	}
 	if m["password"] == "" {
 		m["password"] = "password"

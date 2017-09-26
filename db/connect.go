@@ -6,6 +6,9 @@ import (
 	"os"
 
 	_ "github.com/lib/pq" // postgress db driver
+	"github.com/mattes/migrate"
+	"github.com/mattes/migrate/database/postgres"
+	_ "github.com/mattes/migrate/source/file" // for postgress migrate from file
 	"github.com/mtdx/keyc/config"
 )
 
@@ -30,6 +33,15 @@ func Open() *sql.DB {
 		fmt.Fprintf(os.Stderr, "Unable to ping the db: %v\n", err)
 		os.Exit(1)
 	}
+
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	m, err := migrate.NewWithDatabaseInstance("file://db/migrations/", "postgres", driver)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to migrate the db: %v\n", err)
+		os.Exit(1)
+	}
+	defer m.Close()
+	m.Up()
 
 	return db
 }
