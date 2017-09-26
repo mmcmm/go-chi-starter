@@ -15,13 +15,10 @@ func Env() map[string]string {
 		m["host"] = "localhost"
 	}
 	if m["user"] == "" {
-		m["user"] = "case"
+		m["user"] = "user"
 	}
 	if m["password"] == "" {
 		m["password"] = "password"
-	}
-	if m["pool"] == "" {
-		m["pool"] = "30"
 	}
 
 	return m
