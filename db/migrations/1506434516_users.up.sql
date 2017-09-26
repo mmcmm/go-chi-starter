@@ -1,7 +1,7 @@
-CREATE TABLE users
+CREATE TABLE user
 (
   id         BIGINT            NOT NULL
-    CONSTRAINT users_pkey
+    CONSTRAINT user_pkey
     PRIMARY KEY,
   username   VARCHAR(255)
 );
