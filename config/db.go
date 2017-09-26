@@ -8,7 +8,6 @@ func Env() map[string]string {
 		"host":     os.Getenv("DB_HOST"),
 		"user":     os.Getenv("DB_USER"),
 		"password": os.Getenv("DB_PASSWORD"),
-		"pool":     os.Getenv("DB_POOL"),
 	}
 
 	if m["host"] == "" {
