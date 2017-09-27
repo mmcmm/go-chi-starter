@@ -11,8 +11,6 @@ type homeResponse struct {
 }
 
 func (rd *homeResponse) Render(w http.ResponseWriter, r *http.Request) error {
-	// Pre-processing before a response is marshalled and sent across the wire
-	rd.Elapsed = 10
 	return nil
 }
 
