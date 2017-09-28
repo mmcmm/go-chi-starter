@@ -13,6 +13,7 @@ var r *chi.Mux
 
 func addRoutes() {
 	r.Get("/", handler.Home)
+	r.Get("/auth", handler.Auth)
 }
 
 // StartRouter create chi router & add the routes
