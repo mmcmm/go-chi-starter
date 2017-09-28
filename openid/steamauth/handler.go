@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
+	"github.com/mtdx/keyc/common"
 	"github.com/mtdx/keyc/config"
 )
 
@@ -23,12 +24,15 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	switch opId.mode() {
 	case "":
 		http.Redirect(w, r, opId.authUrl(), 301)
+		return
 	case "cancel":
 		w.Write([]byte("Authorization cancelled"))
+		return
 	default:
 		steamId, err := opId.validateAndGetId()
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			render.Render(w, r, common.ErrInvalidRequest(err))
+			return
 		}
 
 		tokenAuth := jwtauth.New("HS256", []byte(config.JwtKey()), nil)
