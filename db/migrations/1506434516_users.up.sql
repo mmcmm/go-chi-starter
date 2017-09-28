@@ -1,4 +1,4 @@
-CREATE TABLE user
+CREATE TABLE users
 (
   id         BIGINT            NOT NULL
     CONSTRAINT user_pkey
