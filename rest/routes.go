@@ -10,25 +10,29 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 	"github.com/mtdx/keyc/config"
+	"github.com/mtdx/keyc/openid/steamauth"
 	"github.com/mtdx/keyc/rest/handler"
 )
 
 var r *chi.Mux
-var tokenAuth *jwtauth.JwtAuth
 
 func addRoutes() {
+	tokenAuth := jwtauth.New("HS256", []byte(config.JwtKey()), nil)
+
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Get("/", handler.Home)
 		r.Get("/auth", handler.Auth)
+		r.Get("/login", steamauth.LoginHandler)
 
 		// Protected routes
 		r.Group(func(r chi.Router) {
+
 			r.Use(jwtauth.Verifier(tokenAuth))
 			r.Use(jwtauth.Authenticator)
 
 			r.Get("/authenticated", func(w http.ResponseWriter, r *http.Request) {
 				_, claims, _ := jwtauth.FromContext(r.Context())
-				w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["user_id"])))
+				w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["id"])))
 			})
 		})
 	})
@@ -36,7 +40,6 @@ func addRoutes() {
 
 // StartRouter create chi router & add the routes
 func StartRouter() *chi.Mux {
-	tokenAuth = jwtauth.New("HS256", []byte(config.JwtKey()), nil)
 	r = chi.NewRouter()
 
 	r.Use(middleware.RequestID)

@@ -24,7 +24,7 @@ func (rd *authResponse) Render(w http.ResponseWriter, r *http.Request) error {
 func Auth(w http.ResponseWriter, r *http.Request) {
 	tokenAuth = jwtauth.New("HS256", []byte(config.JwtKey()), nil)
 	exp := time.Now().Add(time.Hour * time.Duration(12)).Unix()
-	claims := jwtauth.Claims{"user_id": 123, "exp": exp}
+	claims := jwtauth.Claims{"id": 123, "exp": exp}
 	_, tokenString, _ := tokenAuth.Encode(claims)
 	resp := &authResponse{Token: tokenString}
 
