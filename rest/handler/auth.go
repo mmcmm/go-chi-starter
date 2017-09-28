@@ -11,7 +11,6 @@ import (
 )
 
 var tokenAuth *jwtauth.JwtAuth
-var timeFunc func() time.Time
 
 type authResponse struct {
 	Token string `json:"token"`
@@ -25,8 +24,7 @@ func (rd *authResponse) Render(w http.ResponseWriter, r *http.Request) error {
 func Auth(w http.ResponseWriter, r *http.Request) {
 	tokenAuth = jwtauth.New("HS256", []byte(config.JwtKey()), nil)
 	exp := time.Now().Add(time.Hour * time.Duration(12)).Unix()
-	origIat := time.Now().Unix()
-	claims := jwtauth.Claims{"id": 123, "exp": exp, "orig_iat": origIat}
+	claims := jwtauth.Claims{"user_id": 123, "exp": exp}
 	_, tokenString, _ := tokenAuth.Encode(claims)
 	resp := &authResponse{Token: tokenString}
 
