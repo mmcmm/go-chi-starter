@@ -17,17 +17,19 @@ var r *chi.Mux
 var tokenAuth *jwtauth.JwtAuth
 
 func addRoutes() {
-	r.Get("/", handler.Home)
-	r.Get("/auth", handler.Auth)
+	r.Route("/api/v1", func(r chi.Router) {
+		r.Get("/", handler.Home)
+		r.Get("/auth", handler.Auth)
 
-	// Protected routes
-	r.Group(func(r chi.Router) {
-		r.Use(jwtauth.Verifier(tokenAuth))
-		r.Use(jwtauth.Authenticator)
+		// Protected routes
+		r.Group(func(r chi.Router) {
+			r.Use(jwtauth.Verifier(tokenAuth))
+			r.Use(jwtauth.Authenticator)
 
-		r.Get("/authenticated", func(w http.ResponseWriter, r *http.Request) {
-			_, claims, _ := jwtauth.FromContext(r.Context())
-			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["user_id"])))
+			r.Get("/authenticated", func(w http.ResponseWriter, r *http.Request) {
+				_, claims, _ := jwtauth.FromContext(r.Context())
+				w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["user_id"])))
+			})
 		})
 	})
 }
