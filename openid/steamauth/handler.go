@@ -1,6 +1,7 @@
 package steamauth
 
 import (
+	"database/sql"
 	"net/http"
 	"time"
 
@@ -32,6 +33,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		steamId, err := opId.validateAndGetId()
 		if err != nil {
 			render.Render(w, r, common.ErrInvalidRequest(err))
+			return
+		}
+		dbconn := r.Context().Value("DBCONN").(*sql.DB)
+		_, err = dbconn.Exec(`INSERT INTO users (id, username) VALUES ($1, 'test') ON CONFLICT DO NOTHING`, steamId)
+		if err != nil {
+			render.Render(w, r, common.ErrInternalServer(err))
 			return
 		}
 

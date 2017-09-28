@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"time"
@@ -39,7 +40,7 @@ func addRoutes() {
 }
 
 // StartRouter create chi router & add the routes
-func StartRouter() *chi.Mux {
+func StartRouter(dbconn *sql.DB) *chi.Mux {
 	r = chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -50,6 +51,7 @@ func StartRouter() *chi.Mux {
 	r.Use(middleware.DefaultCompress)
 	r.Use(middleware.Timeout(60 * time.Second))
 	r.Use(render.SetContentType(render.ContentTypeJSON))
+	r.Use(middleware.WithValue("DBCONN", dbconn))
 
 	addRoutes()
 

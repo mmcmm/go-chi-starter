@@ -40,7 +40,6 @@ func Open() *sql.DB {
 		fmt.Fprintf(os.Stderr, "Unable to migrate the db: %v\n", err)
 		os.Exit(1)
 	}
-	defer m.Close()
 
 	err = m.Up()
 	if err != nil && err.Error() != "no change" {

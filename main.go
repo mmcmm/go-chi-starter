@@ -3,14 +3,14 @@ package main
 import (
 	"net/http"
 
+	"github.com/mtdx/keyc/db"
 	"github.com/mtdx/keyc/rest"
 )
 
 func main() {
-	// TODO: uncomment
-	// dbconn := db.Open()
-	// defer dbconn.Close()
+	dbconn := db.Open()
+	defer dbconn.Close()
 
-	r := rest.StartRouter()
+	r := rest.StartRouter(dbconn)
 	http.ListenAndServe(":3000", r)
 }
