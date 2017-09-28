@@ -41,7 +41,12 @@ func Open() *sql.DB {
 		os.Exit(1)
 	}
 	defer m.Close()
-	m.Up()
+
+	err = m.Up()
+	if err != nil && err.Error() != "no change" {
+		fmt.Fprintf(os.Stderr, "Unable to run the migrations: %v\n", err)
+		os.Exit(1)
+	}
 
 	return db
 }
